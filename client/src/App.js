@@ -1,9 +1,20 @@
-
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
+import styled from "styled-components";
+import Home from "./Routes/Home";
 function App() {
   return (
-    <div> Welcom to my Home
-    </div>
-  );
+  <Container>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        {/* <Route path="/" element={<Home/>}/> */}
+        {/* <Route path="/" element={<Home/>}/> */}
+
+      </Routes>
+    </Router>
+  </Container>);
 }
+const Container = styled.div`
+`
 
 export default App;
