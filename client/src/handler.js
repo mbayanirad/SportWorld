@@ -1,37 +1,27 @@
+// Exercise 3.2 - `getAddressPosition`
+// ---------------------------------
 
-//this function use for reciive data from backénd
-export const getDataFromServer = (Endpoint) => {
-    try {
-      return fetch(Endpoint)
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.status === 200) return res.data;
-          else return null;
-        });
-    } catch (err) {
-      throw window.alert(err.Message);
-    }
+const opencage = require('opencage-api-client');
+require('dotenv').config();
+
+const getPositionFromAddress = (address) => {
+  const requestObj = {
+    key: process.env.OPENCAGE_API_KEY,
+    q: address,
   };
-  //this function is for post, patch or upadte
-  export const sentDataToServer =  (Endpoint, Method, Body = "") => {
-    let success = false;
-    const init = {
-      method: Method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(Body),
-    };
-    return fetch(Endpoint, init)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status > 300) {
-          success = false;
-          return false;
-        //   throw window.alert(res.Message);
-        } else {
-          return res.data
-        }
-      });
-  };
-  
+  return opencage
+  .geocode(requestObj)
+  .then((data) => {
+    return (data.results[0].geometry);
+  })
+  .catch((error) => {
+    console.log('error', error.message);
+  });
+
+
+  // return something...
+};
+
+getPositionFromAddress(
+  '1455 Boulevard de Maisonneuve O, Montréal, QC H3G 1M8'
+).then((response) => console.log(response));

@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Home from "./components/Routes/Home";
 import Singin from "./components/Singin";
 import GlobalStyles from "./components/GlobalStyles"
+import EventDetails from "./components/Routes/Home/EventDetails";
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Singin/>}/>
-
+        <Route path="/eventDetails" element={<EventDetails/>}/>
         {/* <Route path="/" element={<Home/>}/> */}
         {/* <Route path="/" element={<Home/>}/> */}
 

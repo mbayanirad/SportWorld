@@ -30,9 +30,6 @@ const Banner = ({ groups }) => {
         name: groups[groupIndex].name,
         ...groups[groupIndex].annuncements[eventindex],
       });
-      console.log(event.name, event.participants);
-      // console.log("state _id",state._id);
-
       const check = await groups[groupIndex].annuncements[
         eventindex
       ].participants.includes(`${state._id}`);
@@ -87,6 +84,9 @@ const Banner = ({ groups }) => {
       method: method,
     });
   };
+  const hadleEventDetails = (event) => {
+    setCurrentEvent(event)
+  }
   if (event === {}) return <div>loading</div>;
   return (
     <>
@@ -105,13 +105,15 @@ const Banner = ({ groups }) => {
             />
             <AiFillCaretLeft size={30} onClick={() => handlePrev()} />
           </div>
-          <EventWrapper to = '/eventDetails'>
+          <EventWrapper 
+            onClick={()=> hadleEventDetails(event)}
+            to = '/eventDetails'>
             <Image
               cloudName="doc7plec9"
               publicId={event.imgs[0]}
               loading="lazy"
             >
-              <Transformation rawTransformation="h_180,w_580,c_fill,r_20" />
+              <Transformation rawTransformation="h_320,w_580,c_fill,r_20" />
               <Transformation effect="outline:10" color="lightblue" />
               <Transformation background="lightblue" />
             </Image>
@@ -120,8 +122,8 @@ const Banner = ({ groups }) => {
               <P>Activity Type: {event.activityType}</P>
               <P>Evet Description: {event.description}</P>
               <P>Time: {event.startDate}</P>
-              <P>Start Point: {}</P>
-              <P>Path: {}</P>
+              <P>Start point: {event.startpoint.address}</P>
+              {/* <P>Path: {}</P> */}
             </Info>
           </EventWrapper>
           <AiFillCaretRight
@@ -161,6 +163,8 @@ const Container = styled.div`
   margin-right: 15px;
   align-items: center;
   justify-content: space-between;
+  min-height: 50%;
+  max-height: 50%;
 `;
 const EventWrapper = styled(NavLink)`
   text-decoration: none;

@@ -32,6 +32,8 @@ const Map = ({ width, height, setDistination = false }) => {
     
     const calculateRoute = async (ev) => {
         ev.preventDefault();
+        console.log("i am here haha")
+        console.log(originRef.current.value)
         // eslint-disable-next-line no-undef 
         // const pointA = new google.maps.LatLng(51.7519, -1.2578);
         if(originRef.current.value === '' || destinationRef === ''){
@@ -66,6 +68,10 @@ const Map = ({ width, height, setDistination = false }) => {
               <Input type="text" placeholder="Destination" ref={destinationRef} />
             </Autocomplete>
             <CalculateBtn type="submit" value="Calculate Route"  />
+            {/* <Selection key="path">
+              <option value={"Start point"} key="point">Start point</option>
+              <option value={"Training Path"} key="path">Training Path</option>
+            </Selection> */}
           </From>
         </NavBar>
       )}
@@ -86,10 +92,11 @@ const Map = ({ width, height, setDistination = false }) => {
   );
 };
 const Container = styled.div`
-  margin: 20px;
+  margin: 5px 20px;
   min-width: 400px;
   height: ${(measure) => measure.height}px;
   width: ${(measure) => measure.width}px;
+  max-width: 98%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -103,11 +110,17 @@ const NavBar = styled.div`
 const From = styled.form`
   display: flex;
   justify-content: center;
-  /* justify-items: center; */
   align-content: center;
   text-align: center;
   align-items: center;
-  padding: 10px;
+  position: absolute;
+  z-index: 10;
+  background: white;
+  width: 40%;
+  height: 14%;
+  right: 30%;
+  top: 2%;
+  border-radius: 5px;;
 `;
 const Input = styled.input`
   width: auto;
@@ -129,4 +142,5 @@ const MapBox = styled.div`
   height: 100%;
   width: 100%;
 `;
+const Selection = styled.select``
 export default Map;
