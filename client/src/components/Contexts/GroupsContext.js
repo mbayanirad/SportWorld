@@ -2,54 +2,128 @@ import { useEffect } from "react";
 import { createContext, useReducer } from "react";
 
 const initialState = {
-    status:"idel",
-    groups: [],
-    activeUser:null //this key change if a user make login 
-}
+  status: "idel",
+  groups: [],
+  selectedEvent:{} 
+};
 export const GroupsContext = createContext(null);
 //th reducer for handleing the Groups actions
 const reducer = (state, action) => {
-    switch (action.type) {
-        case "get-all-group":
-            return {
-                ...state,
-                status:'dataLoded',
-                groups:[...action.groups]
-                }
-            
-            break;
-    
-        default:
-            break;
-    }
-}
+  switch (action.type) {
+    case "get-all-group":
+      return {
+        ...state,
+        status: "dataLoded",
+        groups: [...action.groups],
+      };
+    case "update-participant":
+      {
+        const newState = { ...state };
+        if (action.data.method === "push") {
+          //push userId into selected event
+          newState.groups
+            .find((group) => group._id === action.data.groupId)
+            .annuncements.find((event) => event.id === action.data.eventId)
+            .participants.push(action.data.userId);
+        } else {
+          const index = newState.groups
+            .find((group) => group._id === action.data.groupId)
+            .annuncements.find((event) => event.id === action.data.eventId)
+            .participants.indexOf(action.data.userId);
+          newState.groups
+            .find((group) => group._id === action.data.groupId)
+            .annuncements.find((event) => event.id === action.data.eventId)
+            .participants.splice(index, 1);
+        }
+        return {
+          status: "updateParticipant",
+          ...newState,
+        };
+      }
+      case "select-event":{
+        return {
+            ...state,
+        status:"set an event",
+        selectedEvent: action.selectedEvent}
+      }
+      break;
 
-export const GroupsProvider = ({children}) => {
-    const [state, dispathcer] = useReducer(reducer,initialState)
-    const getAllGroups = () => {
-         fetch('/api/AllGroups')
-        .then(res => res.json())
-        .then(data => {
-            // console.log(data.status);
-            // console.log(data.data);
-            // console.log("----------------------")
+    default:
+      break;
+  }
+};
 
-           if(data.status === 200 ) {
-            dispathcer({
-                type:"get-all-group",
-                groups:[...data.data]});}
-        })
-    }
-    useEffect(() => {
-        getAllGroups()
+export const GroupsProvider = ({ children }) => {
+  const [state, dispathcer] = useReducer(reducer, initialState);
+  //fetch all groups from backent
+  const getAllGroups = () => {
+    fetch("/api/AllGroups")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 200) {
+          //Load data into reducer state
+          dispathcer({
+            type: "get-all-group",
+            groups: [...data.data],
+          });
+        }
+      });
+  };
 
-    }, []);
-    return (
-        <GroupsContext.Provider value={{
-            state,
-            actions:{getAllGroups}
-        }}>
-            {children}
-        </GroupsContext.Provider>
-    )
-}
+  //set a user as participant in spetial group
+  const updateEventParticipant = (data) => {
+    console.log("---------------groupContext-------------");
+    console.log({data: {
+        "groupId": data.groupId,
+        eventId: data.eventId,
+        userId: data.userId,
+        method: data.method, //specify we have to do pull or push
+      },
+    });
+    fetch("/api/group/patricipant", {
+      method: "PATCH",
+      headers: { "Contect-type": "application/json" },
+      body: JSON.stringify({
+        data: {
+          groupId: data.groupId,
+          eventId: data.eventId,
+          userId: data.userId,
+          method: data.method, //specify we have to do pull or push
+        },
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 200)
+          dispathcer({
+            type: "update-participant",
+            data: data,
+          });
+      });
+  };
+  // set an event in selectedEvent 
+  const setCurrentEvent = (event) => {
+    dispathcer({
+        type: "select-event",
+        selectedEvent:event
+    })
+  }
+  //load all group info when website loading
+  useEffect(() => {
+    getAllGroups();
+  }, []);
+  return (
+    <GroupsContext.Provider
+      value={{
+        state,
+        actions: {
+          getAllGroups,
+          updateEventParticipant,
+          setCurrentEvent
+        },
+      }}
+    >
+      {children}
+    </GroupsContext.Provider>
+  );
+};

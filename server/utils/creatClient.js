@@ -1,9 +1,9 @@
 
+require('dotenv').config();
 
 // function to create client
 const creatClient = () =>{
     const { MongoClient } = require("mongodb");
-    require('dotenv').config();
     const {MONGO_URI} = process.env;
     const options = {
         useNewUrlParser: true,
@@ -12,5 +12,6 @@ const creatClient = () =>{
 
     return new MongoClient(MONGO_URI, options);
 }
+
 
 module.exports = {creatClient}

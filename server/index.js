@@ -1,6 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
-const { getUserByInfo } = require('./Handlers/getUserById');
+const { getAllGroups } = require('./Handlers/getAllGroups');
+const { uploadImgByCloudinary } = require('./Handlers/uploadImgByCloudinary');
+const { getUserByInfo } = require('./Handlers/getUserByInfo');
+const { updateEventParticipant } = require('./Handlers/updateEventParticipant');
 const PORT = process.env.PORT || 4000;
 
 
@@ -13,7 +16,7 @@ const app = express()
 
 //logging 
 if (process.env.NODE_ENV === "development") {
-    app.use(morgan('env'))
+    app.use(morgan('env'));
     app.use(function(req, res, next) {
       res.header(
         'Access-Control-Allow-Methods',
@@ -25,17 +28,26 @@ if (process.env.NODE_ENV === "development") {
       );
       next();
     })
-    // .use(morgan('tiny'))
-    app.use(express.static('./server/assets'))
-    app.use(express.json())
-    app.use(express.urlencoded({ extended: false }))
-    app.use('/', express.static(__dirname + '/'))
+    app.use(express.json({limit: '50mb'}));
+    app.use(express.urlencoded({limit: '50mb',extended:true}))
 }
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/api/user', getUserByInfo)
+//get Methods
+//get all groups info
+app.get('/api/AllGroups', getAllGroups)
+
+//patch methods
+//add/remove a user from an event participants
+app.patch("/api/group/patricipant",updateEventParticipant)
+
+//Posts Method
+//Login end point
+app.post('/api/user', getUserByInfo)
+//upload images on cloudinary 
+app.post('/api/uploadimg', uploadImgByCloudinary)
 
 app.get("*", (req, res) => {
   res.status(404).json({

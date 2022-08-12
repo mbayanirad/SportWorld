@@ -22,6 +22,7 @@ const imgsrc = [ski,ski2,ski3,camping,cycling,cycling3,fitness,fitness2,football
 const Singin = () => {
   const [currentImage, setCurrentImage] = useState(null);
   useEffect(() => {
+    setCurrentImage(imgsrc[Math.floor(Math.random() * imgsrc.length)]);
     const intervalId = setInterval(() => {
       setCurrentImage(imgsrc[Math.floor(Math.random() * imgsrc.length)]);
   }, 5000)
