@@ -13,6 +13,7 @@ const Home = () => {
         <Wrapper>
             <Events>
                {groups.length > 0 && <Banner groups = {groups}/>}
+               
                 {/* <Upload/> */}
             {/* <Map width={1000} height={600}  setDistination={true} /> */}
             </Events>

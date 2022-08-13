@@ -2,15 +2,26 @@ import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { MdOutlineBusinessCenter } from "react-icons/md";
+import { AiOutlineLogin } from "react-icons/ai";
+
+
 import { MdSportsKabaddi } from "react-icons/md";
 // import { FaHiking, FaIcons } from "";
 import { GiThreeFriends } from "react-icons/gi";
 // import { useContext, useEffect, useState } from "react";
 import Logo from "../../assets/Logo.gif";
+import { useContext } from "react";
+import { UserContext } from "../Contexts/UserContext";
 // import { v4 as uuidv4, v4 } from "uuid";
 
 const Header = () => {
-
+  const {state} = useContext(UserContext)
+  const navigate = useNavigate()
+  const handleNav = (nav) => {
+    navigate(nav);
+  }
+  if (state._id !== null)
+    return
   return (
   
       <>
@@ -29,17 +40,21 @@ const Header = () => {
             </SearchResults>
           </SearchDiv> */}
         </Container>
-        <CartTxt>
-          Cart
-          <IconDiv>
+        {/* <CartTxt> */}
+          {/* Cart */}
+          {/* <IconDiv> */}
             {/* <Link to="/"> */}
-              <RiShoppingCartFill
-                style={{ color: "white", fontSize: "23px" }}
-                />
-              <QuantityBox>qty</QuantityBox>
+              {/* <RiShoppingCartFill */}
+                {/* style={{ color: "white", fontSize: "23px" }} */}
+                {/* /> */}
+              {/* <QuantityBox>qty</QuantityBox> */}
             {/* </Link> */}
-          </IconDiv>
-        </CartTxt> 
+          {/* </IconDiv> */}
+        {/* </CartTxt>  */}
+        <IconDiv onClick={() => handleNav("/login")}>
+          login
+          <AiOutlineLogin />
+        </IconDiv>
       </Wrapper>
       <Nav>
 
@@ -140,7 +155,7 @@ const Icon = styled.div`
 `;
 const Wrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 12px;
   background: #5890FF;
@@ -178,7 +193,7 @@ const IconDiv = styled.div`
   position: relative;
   justify-content: center;
   align-items: center;
-  margin-left: 5px;
+  margin-left: 15px;
   cursor: pointer;
   color: white;
 `;

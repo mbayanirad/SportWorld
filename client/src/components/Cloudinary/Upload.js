@@ -1,13 +1,11 @@
 import { useState } from "react";
 
 const Upload = () => {
-    const [fileInputState, setFileInputState] = useState('');
-    const [selectedFile, setSelectedFile] = useState("");
     const [previewSource, setPreviewSource] = useState();
   const handleFileInputChange = (ev) => {
     //just get first file thaty selected if we have multifile
     const file = ev.target.files[0]; 
-    //this fuction use for show img on img tag
+    //prepar imgsrc from file
     previewFile(file);
   };
   const previewFile = (file) => {

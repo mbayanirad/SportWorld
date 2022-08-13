@@ -9,6 +9,7 @@ const initialState = {
 export const GroupsContext = createContext(null);
 //th reducer for handleing the Groups actions
 const reducer = (state, action) => {
+    console.log("Action",action);
   switch (action.type) {
     case "get-all-group":
       return {
@@ -21,6 +22,7 @@ const reducer = (state, action) => {
         const newState = { ...state };
         if (action.data.method === "push") {
           //push userId into selected event
+          console.log("newState Befor",newState);
           newState.groups
             .find((group) => group._id === action.data.groupId)
             .annuncements.find((event) => event.id === action.data.eventId)
@@ -30,11 +32,14 @@ const reducer = (state, action) => {
             .find((group) => group._id === action.data.groupId)
             .annuncements.find((event) => event.id === action.data.eventId)
             .participants.indexOf(action.data.userId);
+            
           newState.groups
             .find((group) => group._id === action.data.groupId)
             .annuncements.find((event) => event.id === action.data.eventId)
             .participants.splice(index, 1);
         }
+        console.log("newState After",newState);
+
         return {
           status: "updateParticipant",
           ...newState,
@@ -54,7 +59,7 @@ const reducer = (state, action) => {
 };
 
 export const GroupsProvider = ({ children }) => {
-  const [state, dispathcer] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   //fetch all groups from backent
   const getAllGroups = () => {
     fetch("/api/AllGroups")
@@ -62,7 +67,7 @@ export const GroupsProvider = ({ children }) => {
       .then((data) => {
         if (data.status === 200) {
           //Load data into reducer state
-          dispathcer({
+          dispatch({
             type: "get-all-group",
             groups: [...data.data],
           });
@@ -73,37 +78,40 @@ export const GroupsProvider = ({ children }) => {
   //set a user as participant in spetial group
   const updateEventParticipant = (data) => {
     console.log("---------------groupContext-------------");
-    console.log({data: {
-        "groupId": data.groupId,
+    console.log({
+        groupId: data.groupId,
         eventId: data.eventId,
         userId: data.userId,
         method: data.method, //specify we have to do pull or push
       },
-    });
-    fetch("/api/group/patricipant", {
+    );
+   return fetch("/api/group/patricipant", {
       method: "PATCH",
-      headers: { "Contect-type": "application/json" },
+      headers: { 
+        "Content-type": "application/json",
+        Accept:"application/json" },
       body: JSON.stringify({
-        data: {
           groupId: data.groupId,
           eventId: data.eventId,
           userId: data.userId,
           method: data.method, //specify we have to do pull or push
-        },
       }),
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.status === 200)
-          dispathcer({
+        if (res.status === 200){
+          dispatch({
             type: "update-participant",
             data: data,
-          });
+        });
+        return true
+    }
+    return false;
       });
   };
   // set an event in selectedEvent 
   const setCurrentEvent = (event) => {
-    dispathcer({
+    dispatch({
         type: "select-event",
         selectedEvent:event
     })

@@ -6,17 +6,34 @@ import {
   DirectionsRenderer,
   DirectionsService
 } from "@react-google-maps/api";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 // import {SkeletonText, Text} from '@chakra-ui/react'
-const center = { lat: 45.459316, lng: -73.548542 };
-const center2 = { lat: 44.459316, lng: -72.548542 };
+// const center2 = { lat: 44.459316, lng: -72.548542 };
 
-const Map = ({ width, height, setDistination = false }) => {
-    const [directionResponse, setDirectionResponse] = useState(null);
-    const [distance, setDistance] = useState("");
-    const [duration, setDuration] = useState("");
-    
+const Map = ({ width, height, setDirection = false,eventInfo}) => {
+  const [directionResponse, setDirectionResponse] = useState(null);
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const center = {...eventInfo.startpoint.geo};
+  // { lat: 44.459316, lng: -72.548542 }
+  // for set origin and destinatiion point with event information
+  const [origin, setOrigin] = useState("");
+  const [destination, setDestination] = useState("");
+  const [mapSelection, setMapSelection] = useState(null);
+  useEffect(() => {
+    console.log("map useefect",mapSelection)
+    if(mapSelection === "Start point" && eventInfo !== "")
+        setDestination(eventInfo.startpoint.address);
+      else{
+        // setOrigin()
+      }
+        
+      return () => {
+        setOrigin("");
+        setDestination("")
+      };
+    }, [mapSelection]);
     //auto comletation by vscode
     /** @type React.MutableRe&Object<HTMLInputElement> */
     const originRef = useRef();
@@ -24,9 +41,8 @@ const Map = ({ width, height, setDistination = false }) => {
     /** @type React.MutableRe&Object<HTMLInputElement> */
     const destinationRef = useRef();
     
-    console.log(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: "AIzaSyDmPfSS2HD8KXuStZRXhsFKXE-EUDvWPSM",
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries: ["places"],
     });
     
@@ -58,20 +74,35 @@ const Map = ({ width, height, setDistination = false }) => {
   if (!isLoaded) return <div>Loading...</div>;
   return (
     <Container width={width} height={height}>
-      {setDistination && (
+      {setDirection && (
         <NavBar>
           <From onSubmit={(ev)=> calculateRoute(ev)}>
             <Autocomplete>
-              <Input type="text" placeholder="Origin" ref={originRef}/>
+              <Input 
+                type="text" 
+                placeholder="Origin" 
+                ref={originRef}
+                value={origin}
+                onChange={(ev) => setOrigin(ev.target.value)}
+                />
             </Autocomplete>
             <Autocomplete>
-              <Input type="text" placeholder="Destination" ref={destinationRef} />
+              <Input 
+                type="text" 
+                placeholder="Destination" 
+                ref={destinationRef}
+                value={destination}
+                onChange={(ev) => setDestination(ev.target.value)}
+                />
             </Autocomplete>
             <CalculateBtn type="submit" value="Calculate Route"  />
-            {/* <Selection key="path">
+            <Selection 
+              key="path"
+              value={mapSelection}
+              onChange={(ev) => setMapSelection(ev.target.value)}>
               <option value={"Start point"} key="point">Start point</option>
               <option value={"Training Path"} key="path">Training Path</option>
-            </Selection> */}
+            </Selection>
           </From>
         </NavBar>
       )}
@@ -85,7 +116,7 @@ const Map = ({ width, height, setDistination = false }) => {
         >
           {/* Displayin markers, or directions */}
           <Marker position={center} />
-          <Marker position={center2} />
+          {/* <Marker position={center2} /> */}
         </GoogleMap>
       </MapBox>
     </Container>
@@ -121,6 +152,7 @@ const From = styled.form`
   right: 30%;
   top: 2%;
   border-radius: 5px;;
+  padding: 5px ;
 `;
 const Input = styled.input`
   width: auto;
@@ -142,5 +174,7 @@ const MapBox = styled.div`
   height: 100%;
   width: 100%;
 `;
-const Selection = styled.select``
+const Selection = styled.select`
+  margin-left: 10px;
+`
 export default Map;

@@ -34,8 +34,8 @@ const Banner = ({ groups }) => {
         eventindex
       ].participants.includes(`${state._id}`);
       setParticipated(check);
-      console.log("event", event);
-      console.log("groups", groups);
+      // console.log("event", event);
+      // console.log("groups", groups);
     }
   };
   //----------------------------------------------------
@@ -76,13 +76,18 @@ const Banner = ({ groups }) => {
   };
 
   //update goups event participant by this user id
-  const handleParticipate = (groupId, eventId, userId,method) => {
-    updateEventParticipant({
+  const handleParticipate = async(groupId, eventId, userId,method) => {
+    const result = await updateEventParticipant({
       groupId: groupId,
       eventId: eventId,
       userId: userId,
       method: method,
     });
+    console.log("result part is",result);
+    if (result && method === "pull")
+      setParticipated(false);
+    else if(result && method === "push")
+      setParticipated(true);    
   };
   const hadleEventDetails = (event) => {
     setCurrentEvent(event)
