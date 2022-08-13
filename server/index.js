@@ -4,6 +4,7 @@ const { getAllGroups } = require('./Handlers/getAllGroups');
 const { uploadImgByCloudinary } = require('./Handlers/uploadImgByCloudinary');
 const { getUserByInfo } = require('./Handlers/getUserByInfo');
 const { updateEventParticipant } = require('./Handlers/updateEventParticipant');
+const { registerNewUser } = require('./Handlers/registerNewUser');
 const PORT = process.env.PORT || 4000;
 
 
@@ -45,9 +46,11 @@ app.patch("/api/group/patricipant",updateEventParticipant)
 
 //Posts Method
 //Login end point
-app.post('/api/user', getUserByInfo)
+app.post('/api/user/logIn', getUserByInfo)
+//register an user
+app.post('/api/user/register',registerNewUser)
 //upload images on cloudinary 
-app.post('/api/uploadimg', uploadImgByCloudinary)
+// app.post('/api/uploadimg', uploadImgByCloudinary)
 
 app.get("*", (req, res) => {
   res.status(404).json({

@@ -22,6 +22,8 @@ const getPositionFromAddress = (address) => {
   // return something...
 };
 
-// getPositionFromAddress(
+module.exports = {getPositionFromAddress};
+// const result = getPositionFromAddress(
 //   '301 Rue Caisse, Verdun, QC H4G 3M3, Canada'
-// ).then((response) => console.log(response));
+// ).then((response) => {return response});
+// console.log(result)
