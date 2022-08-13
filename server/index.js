@@ -5,6 +5,7 @@ const { uploadImgByCloudinary } = require('./Handlers/uploadImgByCloudinary');
 const { getUserByInfo } = require('./Handlers/getUserByInfo');
 const { updateEventParticipant } = require('./Handlers/updateEventParticipant');
 const { registerNewUser } = require('./Handlers/registerNewUser');
+const { getAllusers } = require('./Handlers/getAllusers');
 const PORT = process.env.PORT || 4000;
 
 
@@ -39,6 +40,8 @@ app.get('/', (req, res) => {
 //get Methods
 //get all groups info
 app.get('/api/AllGroups', getAllGroups)
+//get all users info
+app.get('/api/users/info', getAllusers)
 
 //patch methods
 //add/remove a user from an event participants
