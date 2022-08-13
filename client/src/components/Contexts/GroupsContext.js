@@ -116,10 +116,7 @@ export const GroupsProvider = ({ children }) => {
         selectedEvent:event
     })
   }
-  //load all group info when website loading
-  useEffect(() => {
-    getAllGroups();
-  }, []);
+
   return (
     <GroupsContext.Provider
       value={{

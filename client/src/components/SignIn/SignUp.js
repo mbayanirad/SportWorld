@@ -5,6 +5,7 @@ import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { useContext } from "react";
 import { UserContext } from "../Contexts/UserContext";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = ({ setSignUp }) => {
   const { isLoaded } = useJsApiLoader({
@@ -40,7 +41,7 @@ const SignUp = ({ setSignUp }) => {
     active:true
   };
   const [individuals, setIndividuals] = useState(inisialState);
-
+  const navigate = useNavigate();
   //set address by change addressRef value
   useEffect(() => {
     if(addressRef?.current?.value)
@@ -64,12 +65,14 @@ const SignUp = ({ setSignUp }) => {
           ...individuals,
           joined: await new Date().toISOString()})
           const result = await registerNewUser(individuals);
-          console.log("handlesubmit result",result)
-          // if not focus on password input
-          console.log(individuals);
+          if (result){
+            setIndividuals(inisialState);
+            navigate("/home");
+          }
+
         }else{
+          // if not focus on password input
           passwordRef.current.style.backgroundColor = "#ffcccb";
-          
           passwordRef.current.focus();
         }
       }
@@ -102,7 +105,7 @@ const SignUp = ({ setSignUp }) => {
         {/* fullName setion */}
         <Section>
           <Input
-            // required
+            required
             type="text"
             placeholder="firstName"
             value={individuals.firstName}
@@ -112,7 +115,7 @@ const SignUp = ({ setSignUp }) => {
             // key={"firstName"}
           />
           <Input
-            // required
+            required
             type="text"
             placeholder="lastName"
             value={individuals.lastName}
@@ -125,7 +128,7 @@ const SignUp = ({ setSignUp }) => {
         {/* email/Id section */}
         <Section>
           <Input
-            // required
+            required
             type="text"
             placeholder="email"
             value={individuals.email}
@@ -135,7 +138,7 @@ const SignUp = ({ setSignUp }) => {
             // key={"email"}
           />
           <Input
-            // required
+            required
             type="text"
             placeholder="userId"
             value={individuals.userId}
@@ -148,7 +151,7 @@ const SignUp = ({ setSignUp }) => {
         {/* password section */}
         <Section>
           <Input
-            // required
+            required
             ref={passwordRef}
             type="password"
             placeholder="password"
@@ -162,7 +165,7 @@ const SignUp = ({ setSignUp }) => {
           />
           <Input
             
-            // required
+            required
             type="password"
             placeholder="verifyPassword"
             value={individuals.verifyPassword}

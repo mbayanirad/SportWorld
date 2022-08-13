@@ -14,8 +14,11 @@ import hicking2 from "../../assets/Login/hicking2.jpg";
 import running from "../../assets/Login/running.jpg";
 import swimming from "../../assets/Login/swimming.jpg";
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import SignUp from "./SignUp";
+import { useContext } from "react";
+import { UserContext } from "../Contexts/UserContext";
+import { useRef } from "react";
 
 const imgsrc = [
   ski,
@@ -36,37 +39,98 @@ const imgsrc = [
 const SignIn = () => {
   const [currentImage, setCurrentImage] = useState(null);
   const [signUp, setSignUp] = useState(false);
+  const navigate = useNavigate();
+  const {
+    actions: { logIn },
+  } = useContext(UserContext);
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+
+  const userIdRef = useRef();
+  const passwordRef = useRef();
   useEffect(() => {
+    //for first time just load a pictuer
     setCurrentImage(imgsrc[Math.floor(Math.random() * imgsrc.length)]);
+    //every 5sec change pictuer
     const intervalId = setInterval(() => {
       setCurrentImage(imgsrc[Math.floor(Math.random() * imgsrc.length)]);
     }, 5000);
-
+    //kill inetrval after logIn
     return () => clearInterval(intervalId);
   }, []);
+  const handleLogIn = async (ev) => {
+    ev.preventDefault();
+    const result = await logIn({userId:userId, password: password})
+    if (result === "success")
+      navigate("/home");
+    else if (result === "passwordNotMatch"){
+      setPassword("");
+      passwordRef.current.style.backgroundColor = "#ffcccb";
+      passwordRef.current.placeholder = "password not match"
+      passwordRef.current.value = "";
+      passwordRef.current.focus();
+    }else{
+      setUserId("");
+      userIdRef.current.style.backgroundColor = "#ffcccb";
+      userIdRef.current.placeholder = "userId/Email not match"
+      userIdRef.current.value = "";
+      userIdRef.current.focus();
+    }
+
+  };
   return (
     <Container>
-      {signUp && <SignUp setSignUp={setSignUp}/>}
-    <SingInForm  style={{ 
-        opacity: signUp ?".3":"1",
-        pointerEvents: signUp ? "none":""}} >
+      {signUp && <SignUp setSignUp={setSignUp} />}
+      <SingInForm
+        style={{
+          opacity: signUp ? ".3" : "1",
+          pointerEvents: signUp ? "none" : "",
+        }}
+      >
         <Img src={currentImage !== null ? currentImage : running} />
         <div>
           <Name>Sport World</Name>
           <Des>Connect with Sport's frinds and Groups around you</Des>
           <Form_Wrapper>
-            <Form>
-              <Input type="text" placeholder="User id or Email" required />
-              <Input type="password" placeholder="Password" required />
+            <Form onSubmit={(ev) => handleLogIn(ev)}>
+              <Input
+                ref={userIdRef}
+                type="text"
+                placeholder="User Id or Email"
+                required
+                value={userId}
+                onChange={(ev) =>{
+                  userIdRef.current.style.backgroundColor = "white";
+                  userIdRef.current.placeholder = "User Id or Email"
+                  setUserId(ev.target.value)}}
+              />
+
+              <Input
+                ref={passwordRef}
+                type="password"
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(ev) => {
+                  passwordRef.current.style.backgroundColor = "white";
+                  passwordRef.current.placeholder = "Password"
+                  setPassword(ev.target.value)}}
+              />
+
               <Login type="submit" value="Log In" />
               <Forgotpsw to="/">Forgot Password?</Forgotpsw>
               <Divider />
             </Form>
-            <CreatAccount >
-              
-              <CreatAccountBtn onClick={(ev)=>{
-                ev.preventDefault();
-                setSignUp(true)}}> Create new account</CreatAccountBtn>
+            <CreatAccount>
+              <CreatAccountBtn
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  setSignUp(true);
+                }}
+              >
+                {" "}
+                Create new account
+              </CreatAccountBtn>
               <div>
                 <GoogleLogin
                   onSuccess={(credentialResponse) => {
@@ -77,7 +141,7 @@ const SignIn = () => {
                   }}
                   shape="circle"
                   logo_alignment="center"
-                  />
+                />
               </div>
             </CreatAccount>
           </Form_Wrapper>
@@ -92,10 +156,9 @@ const Container = styled.div`
   display: flex;
   /* border: 2px solid red; */
   height: 98vh;
-  background-image: url("../assets/backGround.jpg");
   background-color: #e9ebee;
 `;
-const SingInForm = styled(Container)``
+const SingInForm = styled(Container)``;
 
 const Img = styled.img`
   width: 850px;
@@ -131,7 +194,7 @@ const Form = styled.form`
 `;
 const CreatAccount = styled(Form)`
   padding: 0px 10px 30px 10px;
-`
+`;
 const Input = styled.input`
   width: 250px;
   height: 30px;
@@ -147,9 +210,8 @@ const Login = styled(Input)`
   color: white;
   height: 40px;
   margin-bottom: 20px;
-  &:hover{
-  background: #9288ff;
-    
+  &:hover {
+    background: #9288ff;
   }
 `;
 
@@ -162,7 +224,6 @@ const Divider = styled.div`
 const Forgotpsw = styled(NavLink)`
   text-decoration: none;
   color: #5890ff;
-
 `;
 
 const CreatAccountBtn = styled.button`
@@ -173,9 +234,8 @@ const CreatAccountBtn = styled.button`
   height: 30px;
   border-radius: 5px;
   margin: 10px 0;
-  &:hover{
-  background: #99be62;
-
+  &:hover {
+    background: #99be62;
   }
 `;
 export default SignIn;

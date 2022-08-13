@@ -1,38 +1,41 @@
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
-import { RiShoppingCartFill } from "react-icons/ri";
+import { AiOutlineMenu } from "react-icons/ai";
 import { MdOutlineBusinessCenter } from "react-icons/md";
-import { AiOutlineLogin } from "react-icons/ai";
-
-
+import { BiLogOut } from "react-icons/bi";
+import { Image, Transformation } from "cloudinary-react";
 import { MdSportsKabaddi } from "react-icons/md";
-// import { FaHiking, FaIcons } from "";
+import { CgProfile } from "react-icons/cg";
 import { GiThreeFriends } from "react-icons/gi";
-// import { useContext, useEffect, useState } from "react";
 import Logo from "../../assets/Logo.gif";
 import { useContext } from "react";
 import { UserContext } from "../Contexts/UserContext";
+import { useState } from "react";
 // import { v4 as uuidv4, v4 } from "uuid";
 
 const Header = () => {
-  const {state} = useContext(UserContext)
-  const navigate = useNavigate()
+  const { state,actions:{logOut} } = useContext(UserContext);
+  const [menu, setMenu] = useState(false);
+  const navigate = useNavigate();
   const handleNav = (nav) => {
     navigate(nav);
+  };
+  console.log("headerFeed", state);
+  if (state.logInUserId == null) return;
+  const handleLaogOut = () =>{
+    logOut();
+    navigate("/");
   }
-  if (state._id !== null)
-    return
   return (
-  
-      <>
-      <Wrapper>
-         <img src={Logo} style={{ width: "30px", borderRadius: "50%" }} />
+    <>
+      <Wrapper onClick={()=>{if(menu)setMenu(false)}}>
+        <img src={Logo} style={{ width: "30px", borderRadius: "50%" }} />
         {/* <Company to="/">BodyBreak</Company> */}
         <Container>
           <SearchBar
             type="text"
             placeholder="What are you looking for..."
-            ></SearchBar>
+          ></SearchBar>
           {/* <SearchDiv>
             <SearchResults
               style={{ display:  "none" }}
@@ -41,43 +44,105 @@ const Header = () => {
           </SearchDiv> */}
         </Container>
         {/* <CartTxt> */}
-          {/* Cart */}
-          {/* <IconDiv> */}
-            {/* <Link to="/"> */}
-              {/* <RiShoppingCartFill */}
-                {/* style={{ color: "white", fontSize: "23px" }} */}
-                {/* /> */}
-              {/* <QuantityBox>qty</QuantityBox> */}
-            {/* </Link> */}
-          {/* </IconDiv> */}
+        {/* Cart */}
+        {/* <IconDiv> */}
+        {/* <Link to="/"> */}
+        {/* <RiShoppingCartFill */}
+        {/* style={{ color: "white", fontSize: "23px" }} */}
+        {/* /> */}
+        {/* <QuantityBox>qty</QuantityBox> */}
+        {/* </Link> */}
+        {/* </IconDiv> */}
         {/* </CartTxt>  */}
-        <IconDiv onClick={() => handleNav("/login")}>
+        <div
+          style={{
+            marginTop: "60px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <Image cloudName="doc7plec9" publicId={state.logInUserInfo.imgSrc}>
+            <Transformation
+              rawTransformation="h_60,w_60,c_fill,r_2"
+              radius="50"
+              // crop="crop"
+              loading="lazy"
+              background="#5890ff"
+              y="60"
+              x="80"
+            />
+            {/* <Transformation  /> */}
+          </Image>
+          <AiOutlineMenu fill="white" size={30} 
+            onClick={()=>{setMenu(!menu)}} />
+         {menu && <Menu>
+            <Item >
+              <CgProfile size={25}/>
+                <div>Profile</div>
+            </Item>
+            <Item onClick={()=> handleLaogOut()}>
+                <BiLogOut size={25}/>
+                <div>LogOut</div>
+            </Item>
+          </Menu>}
+          {/* <IconDiv onClick={() => handleNav("/login")}>
           login
           <AiOutlineLogin />
-        </IconDiv>
+        </IconDiv> */}
+        </div>
       </Wrapper>
-      <Nav>
-
-      </Nav>
+      <Nav></Nav>
       {/* </> */}
-       <Nav> 
-        <Icon >
+      <Nav>
+        <Icon>
           <Categories>Sport Groups </Categories>
-          <MdSportsKabaddi style={{fill:"white", marginLeft: "10px" }} />
+          <MdSportsKabaddi style={{ fill: "white", marginLeft: "10px" }} />
         </Icon>
-        <Icon >
+        <Icon>
           <Categories>Sport Friends </Categories>
-          <GiThreeFriends style={{fill:"white", marginLeft: "10px" }} />
+          <GiThreeFriends style={{ fill: "white", marginLeft: "10px" }} />
         </Icon>
-        <Icon >
+        <Icon>
           <Categories>Sport Business </Categories>
-          <MdOutlineBusinessCenter style={{fill:"white", marginLeft: "10px" }} />
+          <MdOutlineBusinessCenter
+            style={{ fill: "white", marginLeft: "10px" }}
+          />
         </Icon>
-    </Nav> 
+      </Nav>
     </>
-    )}
+  );
+};
 //   );
 // };
+
+const Menu = styled.div`
+  min-width: 130px;
+  min-height: 90px;
+  color: gray;
+
+  text-align: center;
+  padding-top: 10px;
+  background-color: #e9ebee;
+  box-shadow: 2px 5px 20px 1px;
+  border-radius: 10px;
+  top: 90px;
+  position: absolute;
+`;
+const Item = styled.div`
+  font-size: 0.92em;
+  justify-content: space-evenly;
+  justify-items: center;
+  align-items:center;
+  display: flex;
+  /* font-weight: 500; */
+  font-family: 'Times New Roman', Times, serif;
+  padding-top: 10px;
+  &:hover{
+    background-color: #e9e19e;
+  }
+`;
 
 const Category = styled.span`
   display: flex;
@@ -158,7 +223,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  background: #5890FF;
+  background: #5890ff;
   font-family: "Poppins", sans-serif;
   font-weight: bold;
   height: 50px;
@@ -214,7 +279,7 @@ const Nav = styled.nav`
   color: white;
   font-family: "Poppins", sans-serif;
   font-weight: bold;
-  background: #5890FF;
+  background: #5890ff;
 `;
 
 const Categories = styled.div``;

@@ -2,49 +2,42 @@ import { useEffect } from "react";
 import { createContext, useReducer } from "react";
 
 const initialState = {
-  _logInUserid: null,
+  logInUserId: null,
   status: "idel",
   allUserInfo:[],
-  logInUserInfo:{
-    registeredGroups: [],
-    myGroups:[],
-    friens: [],
-    followingIds:[],
-    followerIds:[]
-  }
+  logInUserInfo:{}
 };
 export const UserContext = createContext(null);
 
 // reducer for handleing the Users actions
 const reducer = (state, action) => {
+  console.log("user-action",action)
   switch (action.type) {
+    
     case "log-in":
       return {
         ...state,
         status: "login",
-        logInUserid: action.info._id,
-        logInUserInfo:{
-          registeredGroups: [...action.info.registeredGroups],
-          myGroups:[...action.info.myGroups],
-          friends: [...action.info.friends],
-          followingIds:[...action.info.followingIds],
-          followerIds:[...action.info.followerIds] 
-        }
+        logInUserId: action.info._id,
+        logInUserInfo:{...action.info}
       };
       case 'registere-New-User':{
         return {
           ...state,
           status: "NewUser",
-          logInUserid: action.info._id,
-          logInUserInfo:{
-            registeredGroups: [...action.info.registeredGroups],
-            myGroups:[...action.info.myGroups],
-            friends: [...action.info.friends],
-            followingIds:[...action.info.followingIds],
-            followerIds:[...action.info.followerIds] 
-          }
+          logInUserId: action.info._id,
+          logInUserInfo:{...action.info}
         };
       }
+      case "get-all-users": {
+        return {
+          ...state,
+          status: "getAllUsers",
+          allUserInfo:[...action.users]
+        }
+      }
+      case "log-out":
+        return {...initialState}
       break;
 
     default:
@@ -54,7 +47,24 @@ const reducer = (state, action) => {
 
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  
+  //get all users info from db and push on state
+  const getAllUserInfo = () => {
+    try {
+      fetch("/api/users/info")
+      .then(res => res.json())
+      .then(parseRes => {
+        if(parseRes.status === 200){
+          dispatch({
+            type: "get-all-users",
+            users:parseRes.data
+          })
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
   const registerNewUser = (userInfo) => {
     try {
      return fetch('/api/user/register',{
@@ -76,7 +86,7 @@ export const UserProvider = ({ children }) => {
     }
   }
   const logIn = (data) => {
-    fetch("/api/user/logIn", {
+    return fetch("/api/user/logIn", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -87,18 +97,24 @@ export const UserProvider = ({ children }) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log("userContext", data);
-        if (data.status === 200) {
+      .then((parseRes) => {
+        console.log("userContext logIn", parseRes);
+        if (parseRes.status === 200) {
           //Load data into reducer state
           dispatch({
             type: "log-in",
-            info: { ...data.data[0] },
+            info: { ...parseRes.data },
           });
-        }
+          return "success";
+        }else if(parseRes.status === 401) return "passwordNotMatch";
+        return "idNotMatch";
       });
   };
-
+  const logOut = () => {
+    dispatch({
+      type:"log-out"
+    })
+  }
   
   // useEffect(() => {
   //   logIn();
@@ -108,7 +124,11 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         state,
-        actions: { logIn,registerNewUser },
+        actions: { 
+          logIn,
+          registerNewUser,
+          getAllUserInfo,
+          logOut},
       }}
     >
       {children}
