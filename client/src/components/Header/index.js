@@ -61,6 +61,7 @@ const Header = () => {
             flexDirection: "column",
             alignItems: "center",
             position: "relative",
+            marginRight:"20px"
           }}
         >
           <Image cloudName="doc7plec9" publicId={state.logInUserInfo.imgSrc}>
@@ -121,7 +122,7 @@ const Menu = styled.div`
   min-width: 130px;
   min-height: 90px;
   color: gray;
-
+  z-index: 10;
   text-align: center;
   padding-top: 10px;
   background-color: #e9ebee;
@@ -227,7 +228,7 @@ const Wrapper = styled.div`
   font-family: "Poppins", sans-serif;
   font-weight: bold;
   height: 50px;
-  padding: 0 70px 0 53px;
+  padding: 10px 20px 0 43px;
 `;
 
 const Company = styled(Link)`

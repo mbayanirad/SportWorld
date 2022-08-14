@@ -76,8 +76,13 @@ input {
 }
   #root{
     height: 100vh;
+    
   }
   .font-link {
     font-family: 'Molle', cursive;
+}
+*{
+  transition: 1s;
+
 }
 `;

@@ -1,5 +1,12 @@
 import styled from "styled-components";
+import Banner from "./Banner";
+import Post from "./Post";
 const Home = () => {
-    return <div> Home Feed</div>
-}
+  return (
+    <>
+      <Banner />
+      <Post />
+    </>
+  );
+};
 export default Home;
