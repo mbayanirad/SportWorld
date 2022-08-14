@@ -1,0 +1,42 @@
+// MongoDB Playground
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// The current database to use.
+use('finall_project');
+
+// Search for documents in the current collection.
+const joinPotsTouser = () =>{
+
+    db.getCollection('sportStatus')
+    .aggregate(
+        [
+            { "$addFields": { "newId": { "$toString": "$_id" } } },
+            { "$addFields": { "newUserId": { "$toString": "$userId" } } },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "userId",
+                    "foreignField": "_id",
+                    "as": "userInfo",
+                },
+            },
+            { "$match": { "newId": "62f94da311141fe6248103aa" } },
+            { "$unwind": "$userInfo" },
+            {
+                "$project": {
+                    "_id": "$newId",
+                    "userId": "$newUserId",
+                    "likeBy": 1,
+                    "media": 1,
+                    "reSport": 1,
+                    "status": 1,
+                    "timeStamp": 1,
+                    "userInfo": "$userInfo",
+                },
+            },
+        ]
+        )
+        
+    }
+
+    module.exports = {joinPotsTouser}

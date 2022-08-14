@@ -6,6 +6,8 @@ const { getUserByInfo } = require('./Handlers/getUserByInfo');
 const { updateEventParticipant } = require('./Handlers/updateEventParticipant');
 const { registerNewUser } = require('./Handlers/registerNewUser');
 const { getAllusers } = require('./Handlers/getAllusers');
+const { newPost } = require('./Handlers/newPost');
+const { getAllPosts } = require('./Handlers/getAllPots');
 const PORT = process.env.PORT || 4000;
 
 
@@ -42,16 +44,22 @@ app.get('/', (req, res) => {
 app.get('/api/AllGroups', getAllGroups)
 //get all users info
 app.get('/api/users/info', getAllusers)
+//get all users posts
+app.get("/api/posts/all",getAllPosts);
 
 //patch methods
 //add/remove a user from an event participants
 app.patch("/api/group/patricipant",updateEventParticipant)
 
 //Posts Method
-//Login end point
+//Login endPoint
 app.post('/api/user/logIn', getUserByInfo)
 //register an user
 app.post('/api/user/register',registerNewUser)
+
+//insert new user post 
+app.post("/api/post/new",newPost);
+
 //upload images on cloudinary 
 // app.post('/api/uploadimg', uploadImgByCloudinary)
 

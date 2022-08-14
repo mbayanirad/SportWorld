@@ -45,9 +45,9 @@ const registerNewUser = async (req, res) => {
     const db = client.db(dbName);
     const result = await db.collection("users").insertOne(userInfo);
       
-    // return result
-       res.status(200).json({ status: 200, data: {_id:result.insertedId,...userInfo }})
-      // : res.status(404).json({ status: 404, massege: "Faild" });
+     return result
+       ? res.status(200).json({ status: 200, data: {_id:result.insertedId,...userInfo }})
+       : res.status(404).json({ status: 404, massege: "Faild" });
   } catch (err) {
     res.status(500).json({ status: 500, Message: err.Message });
 

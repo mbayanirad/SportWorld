@@ -1,18 +1,23 @@
 import { useContext, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { PostContext } from "../../Contexts/PostContext";
+
 
 const Post = ({userId}) => {
+
+  const {actions:{newPost}} = useContext(PostContext)
+
+  //inisial value fo post collection
   const initialState = {
     userId: userId,
-    timeStamp: null,
+    timeStamp: "",
     likeBy:[],
     reSport:[],
     status:[],
     media:[]
   }
   const [previewSource, setPreviewSource] = useState(initialState);
-  const [value, setValue] = useState("");
-  const [loadPost, setLoadPost] = useState(false);
+  const [upLoadPost, setupLoadPost] = useState(false);
 
   const handleFileInputChange = (ev) => {
     //just get first file that selected if we have multifile
@@ -23,17 +28,22 @@ const Post = ({userId}) => {
   const previewFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () =>{
+    reader.onloadend = async () =>{
+      const newTimestamp = await new Date().toTimeString()
         setPreviewSource({
           ...previewSource,
+          timeStamp:newTimestamp,
           media:[...previewSource.media,
             {url:reader.result,
             type:"img"}]});
     }
   }
-  const handelStatus = (evt) => {
+  const handelStatus = async(evt) => {
     evt.preventDefault();
-    setValue("");
+    setupLoadPost(true);
+    const resualt = await newPost(previewSource);
+    setupLoadPost(false);
+    if (resualt) setPreviewSource(initialState);
     
   };
   return (
@@ -47,15 +57,15 @@ const Post = ({userId}) => {
             ...previewSource,status:ev.target.value
           })}
           maxLength="280"
-          charnum={value.length}
+          charnum={previewSource.status.length}
         />
 
         <CharacterNum>{350 - previewSource.status.length}</CharacterNum>
         <BtnWrapper>
           <Inpute type="file" onChange={handleFileInputChange} />
 
-          <Button type="submit">
-            {loadPost && (
+          <Button type="submit"  disabled = {upLoadPost? true:false}>
+            {upLoadPost && (
             <Loading>
             <div></div>
             <div></div>
@@ -70,9 +80,17 @@ const Post = ({userId}) => {
           src={previewSource.media[0].url}
         />
       )}
+      <Divider/>
+      <AllpostWrapper>
+        
+      </AllpostWrapper>
     </Wrapper>
   );
 };
+
+const AllpostWrapper = styled.div`
+
+`
 const Img = styled.img`
   width: 70%;
   height: 400px;
