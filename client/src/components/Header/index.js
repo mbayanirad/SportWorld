@@ -20,7 +20,7 @@ const Header = () => {
   const handleNav = (nav) => {
     navigate(nav);
   };
-  console.log("headerFeed", state);
+  console.log("headerFeeduser", state);
   if (state.logInUserId == null) return;
   const handleLaogOut = () =>{
     logOut();

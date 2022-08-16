@@ -8,6 +8,9 @@ const { registerNewUser } = require('./Handlers/registerNewUser');
 const { getAllusers } = require('./Handlers/getAllusers');
 const { newPost } = require('./Handlers/newPost');
 const { getAllPosts } = require('./Handlers/getAllPots');
+const { updatePostLike } = require('./Handlers/updatePostLike');
+const { updateFollow } = require('./Handlers/updateFollow');
+const { updateFriends } = require('./Handlers/updateFriends');
 const PORT = process.env.PORT || 4000;
 
 
@@ -50,7 +53,12 @@ app.get("/api/posts/all",getAllPosts);
 //patch methods
 //add/remove a user from an event participants
 app.patch("/api/group/patricipant",updateEventParticipant)
-
+//like or dislike post
+app.patch("/api/post/updatLike", updatePostLike)
+//follow or unfollow a user 
+app.patch("/api/user/updatefollow",updateFollow)
+//update friend request 
+app.patch("/api/users/updateFriends",updateFriends)
 //Posts Method
 //Login endPoint
 app.post('/api/user/logIn', getUserByInfo)

@@ -6,8 +6,8 @@ const dbName = "finall_project";
 
 const updateEventParticipant = async (req, res) => {
     const {groupId, eventId, userId,method} = req.body;
-    console.log("body is",req.body);
-    console.log("body is",groupId, eventId, userId,method);
+    // console.log("body is",req.body);
+    // console.log("body is",groupId, eventId, userId,method);
 
     const  query = {
       _id: ObjectId(groupId),

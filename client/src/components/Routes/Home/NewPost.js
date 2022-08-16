@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { PostContext } from "../../Contexts/PostContext";
 
 
-const Post = ({userId}) => {
+const NewPost = ({userId}) => {
 
   const {actions:{newPost}} = useContext(PostContext)
 
@@ -29,7 +29,7 @@ const Post = ({userId}) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = async () =>{
-      const newTimestamp = await new Date().toTimeString()
+      const newTimestamp = await new Date().toISOString()
         setPreviewSource({
           ...previewSource,
           timeStamp:newTimestamp,
@@ -169,6 +169,7 @@ const PostText = styled.textarea`
   /* box-decoration-break: clone; */
   /* margin-left: 65px; */
   margin-top: 15px;
+  padding: 20px;
   margin-bottom: 30px;
   outline: none;
   resize: none;
@@ -252,4 +253,4 @@ const Loading = styled.div`
     }
   }
 `;
-export default Post;
+export default NewPost;

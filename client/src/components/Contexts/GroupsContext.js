@@ -62,6 +62,7 @@ export const GroupsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   //fetch all groups from backent
   const getAllGroups = () => {
+    console.log("group context")
     fetch("/api/AllGroups")
       .then((res) => res.json())
       .then((data) => {
