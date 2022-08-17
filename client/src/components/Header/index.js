@@ -99,16 +99,16 @@ const Header = () => {
       <Nav>
         <Icon onClick={() => navigate("/groups")}>
           
-          <Categories>Sport Groups </Categories>
+          <Categories> Groups </Categories>
           <MdSportsKabaddi style={{ fill: "white", marginLeft: "10px" }} />
           
         </Icon>
-        <Icon>
-          <Categories>Sport Friends </Categories>
+        <Icon onClick={() => navigate("/friends")}>
+          <Categories> Friends </Categories>
           <GiThreeFriends style={{ fill: "white", marginLeft: "10px" }} />
         </Icon>
         <Icon>
-          <Categories>Sport Business </Categories>
+          <Categories> Business </Categories>
           <MdOutlineBusinessCenter
             style={{ fill: "white", marginLeft: "10px" }}
           />

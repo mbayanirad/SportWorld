@@ -7,6 +7,7 @@ import GlobalStyles from "./components/GlobalStyles"
 import EventDetails from "./components/Routes/Groups/Event/EventDetails";
 import Groups from "./components/Routes/Groups";
 import GroupDetails from "./components/Routes/Groups/GroupDetails";
+import Friends from "./components/Routes/Frinds";
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
         <Route path="/groups" element={<Groups/>}/>
         <Route path="/groupdetails" element={<GroupDetails/>}/>
         <Route path="/eventDetails" element={<EventDetails/>}/>
+        <Route path="/friends" element={<Friends/>}/>
+
       </Routes>
     </Router>
   </Container>);
