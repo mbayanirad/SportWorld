@@ -150,7 +150,7 @@ const friendOfLoginUser = post.userInfo.friends.includes(logInUserId);
           )}
           {post.userInfo.registeredGroups.length > 0 && (
             <GroupsJoind>
-              Owner of Groups:
+              Member of Groups:
               {post.userInfo.registeredGroups.map((group) => {
                 return (
                   <> {groups.find((groupe) => groupe._id === group).name}, </>

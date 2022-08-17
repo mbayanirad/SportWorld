@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { GroupsContext } from "../../Contexts/GroupsContext";
+import { GroupsContext } from "../../../Contexts/GroupsContext";
 import { Image, Transformation, Placeholder } from "cloudinary-react";
-import Map from "../../Map";
+import Map from "../../../Map";
 
 const EventDetails = () => {
   const {

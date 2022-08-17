@@ -30,7 +30,7 @@ const Header = () => {
     <>
       <Wrapper onClick={()=>{if(menu)setMenu(false)}}>
         <img src={Logo} style={{ width: "30px", borderRadius: "50%" }} />
-        {/* <Company to="/">BodyBreak</Company> */}
+        <Company to="/home">SportWorld</Company>
         <Container>
           <SearchBar
             type="text"
@@ -97,9 +97,11 @@ const Header = () => {
       <Nav></Nav>
       {/* </> */}
       <Nav>
-        <Icon>
+        <Icon onClick={() => navigate("/groups")}>
+          
           <Categories>Sport Groups </Categories>
           <MdSportsKabaddi style={{ fill: "white", marginLeft: "10px" }} />
+          
         </Icon>
         <Icon>
           <Categories>Sport Friends </Categories>

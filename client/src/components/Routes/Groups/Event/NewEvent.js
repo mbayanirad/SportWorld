@@ -22,23 +22,14 @@ const SignUp = ({ setSignUp }) => {
     {actions:{registerNewUser}} = useContext(UserContext);
   //deceler user document's structuer
   const initialState = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    userId: "",
-    password: "",
-    verifyPassword: "",
-    imgSrc: "",
-    bannerSrc: "",
-    address: null,
-    birthDate: null,
-    bio: "",
-    joined: null,
-    myGroups:[],
-    registeredGroups:[],
-    followerIds:[],
-    followingIds:[],
-    active:true
+    subject: "",
+    description: "",
+    startpoint: "",
+    path: "",
+    participants: "",
+    imgs: [],
+    startDate: "",
+    endDate: "",
   };
   const [individuals, setIndividuals] = useState(initialState);
   const navigate = useNavigate();

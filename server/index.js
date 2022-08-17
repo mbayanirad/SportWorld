@@ -11,6 +11,7 @@ const { getAllPosts } = require('./Handlers/getAllPots');
 const { updatePostLike } = require('./Handlers/updatePostLike');
 const { updateFollow } = require('./Handlers/updateFollow');
 const { updateFriends } = require('./Handlers/updateFriends');
+const { addNewGroup } = require('./Handlers/addNewGroup');
 const PORT = process.env.PORT || 4000;
 
 
@@ -67,6 +68,9 @@ app.post('/api/user/register',registerNewUser)
 
 //insert new user post 
 app.post("/api/post/new",newPost);
+
+//insert new group
+app.post("/api/groups/addNewGroup", addNewGroup)
 
 //upload images on cloudinary 
 // app.post('/api/uploadimg', uploadImgByCloudinary)

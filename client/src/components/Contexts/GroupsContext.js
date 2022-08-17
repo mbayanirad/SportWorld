@@ -4,7 +4,8 @@ import { createContext, useReducer } from "react";
 const initialState = {
   status: "idel",
   groups: [],
-  selectedEvent:{} 
+  selectedEvent:{},
+  selectedGroupId:""
 };
 export const GroupsContext = createContext(null);
 //th reducer for handleing the Groups actions
@@ -51,6 +52,17 @@ const reducer = (state, action) => {
         status:"set an event",
         selectedEvent: action.selectedEvent}
       }
+      case "add-new-group":{
+        const newState = {...state};
+        newState.groups.push(action.data);
+        return {
+          status: "addNewGroup",
+          ...newState
+        }
+      }
+      case "set-selected-group":{
+        return {...state,selectedGroupId: action.selected_id }
+      }
       break;
 
     default:
@@ -75,7 +87,13 @@ export const GroupsProvider = ({ children }) => {
         }
       });
   };
-
+   //set selected group 
+   const setSelectedGroup = (_id) => {
+    dispatch({
+      type:"set-selected-group",
+      selected_id: _id
+    })
+   }
   //set a user as participant in spetial group
   const updateEventParticipant = (data) => {
     console.log("---------------groupContext-------------");
@@ -117,7 +135,31 @@ export const GroupsProvider = ({ children }) => {
         selectedEvent:event
     })
   }
-
+  const addNewGroup = (data) => {
+    console.log("---------befor fetch new group--------");
+    console.log(data)
+    try {
+      fetch("/api/groups/addNewGroup",{
+        method: "POST",
+        headers: { 
+          "Content-type": "application/json",
+          Accept:"application/json" },
+          body: JSON.stringify(data)})
+        .then(res => res.json())
+        .then(parseRes => {
+          if(parseRes.status === 200){
+            console.log("---------after fetch new group--------");
+            console.log(parseRes.data)
+            dispatch({
+              type:"add-new-group",
+              data: parseRes.data
+            })
+          }
+        })
+    } catch (err) {
+        console.log(err)
+    }
+  }
   return (
     <GroupsContext.Provider
       value={{
@@ -125,7 +167,9 @@ export const GroupsProvider = ({ children }) => {
         actions: {
           getAllGroups,
           updateEventParticipant,
-          setCurrentEvent
+          setCurrentEvent,
+          addNewGroup,
+          setSelectedGroup
         },
       }}
     >

@@ -29,13 +29,15 @@ const Banner = ({ groups }) => {
         activityType: groups[groupIndex].activityType,
         name: groups[groupIndex].name,
         ...groups[groupIndex].annuncements[eventindex],
+        imgUrl:`https://res.cloudinary.com/doc7plec9/image/upload/${groups[groupIndex].annuncements[eventindex].imgs[0]}.jpg`.replace('"',"")
+        
       });
+      console.log(event);
+      //detecte current user already is in this event or no
       const check = await groups[groupIndex].annuncements[
         eventindex
       ].participants.includes(`${state._id}`);
       setParticipated(check);
-      // console.log("event", event);
-      // console.log("groups", groups);
     }
   };
   //----------------------------------------------------
@@ -92,7 +94,7 @@ const Banner = ({ groups }) => {
   const hadleEventDetails = (event) => {
     setCurrentEvent(event)
   }
-  if (event === {}) return <div>loading</div>;
+  if (event === {}) return <div>loading ...</div>;
   return (
     <>
       {event.imgs && (
@@ -113,15 +115,7 @@ const Banner = ({ groups }) => {
           <EventWrapper 
             onClick={()=> hadleEventDetails(event)}
             to = '/eventDetails'>
-            <Image
-              cloudName="doc7plec9"
-              publicId={event.imgs[0]}
-              loading="lazy"
-            >
-              <Transformation rawTransformation="h_320,w_580,c_fill,r_20" />
-              <Transformation effect="outline:10" color="lightblue" />
-              <Transformation background="lightblue" />
-            </Image>
+              <Img src = {event.imgUrl}/>
             <Info>
               <P>Group Name: {event.name}</P>
               <P>Activity Type: {event.activityType}</P>
@@ -161,24 +155,38 @@ const Banner = ({ groups }) => {
   );
 };
 
+const Img = styled.img`
+  width: 100%;
+  max-height: 300px;
+  min-width: 620px;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 5px;
+`
+
 const Container = styled.div`
+  border: 3px outset  lightgray;  
   position: relative;
   display: flex;
-  background: lightblue;
+  background: lightblue; 
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+
   margin-right: 15px;
   align-items: center;
   justify-content: space-between;
-  min-height: 50%;
-  max-height: 50%;
+  min-height: 100%;
+  /* max-height: 100%; */
 `;
 const EventWrapper = styled(NavLink)`
   text-decoration: none;
   display: flex;
-  background: lightblue;
   display: flex;
-  min-height: 45%;
-  max-height: 45%;
-  padding: 0 30px;
+  height: auto;
+  /* min-height: 45%; */
+  max-height: 320;
+  /* padding: 0 30px; */
 `;
 const Info = styled.div`
   margin: 30px 30px;
@@ -188,6 +196,7 @@ const P = styled.p`
   font-weight: bold;
   font-size: 1em;
   margin: 20px 0;
+  max-height: fit-content;
   /* color: white; */
 `;
 const DisJoined = styled.button`
