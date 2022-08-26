@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { UserContext } from "../../Contexts/UserContext";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { GroupsContext } from "../../Contexts/GroupsContext";
 
 const NewGroup = ({ setStatus }) => {
+  const [upLoadEvent, setupLoadEvent] = useState(false);
+
   //reducer funcntion for register new group
   const {
     state: { logInUserId },
@@ -26,7 +28,9 @@ const NewGroup = ({ setStatus }) => {
 
   const handleRegister = async (ev) => {
     ev.preventDefault();
-    addNewGroup(individuals);
+    setupLoadEvent(true);
+    await addNewGroup(individuals);
+    setStatus(false);
   };
 
   const previewFile = (file, key) => {
@@ -97,7 +101,15 @@ const NewGroup = ({ setStatus }) => {
         </Section>
         <Divider />
         <Submit>
-          <Btn type="submit" />
+          <Btn type="submit" disabled = {upLoadEvent? true:false}>
+              Submit
+          {upLoadEvent && (
+            <Loading>
+            <div></div>
+            <div></div>
+            </Loading>
+          )}
+          </Btn>
         </Submit>
       </form>
     </Cointtainer>
@@ -114,15 +126,33 @@ const Input = styled.input`
   margin-left: 5px;
 `;
 
-const Btn = styled(Input)`
-  background: #15be89;
+const Btn = styled.button`
+ position: relative;
+  display: block;
+  width: 60%;
+  height: 35px;
+  border-color: transparent;
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+
+  border-radius: 4px;
   color: white;
-  border: none;
-  font-weight: bold;
-  border-radius: 5px;
+  margin-left: 5%;
+  margin-top: 2%;
+  background: #15be89;
+
   &:hover {
-    background: #99be62;
+    background: #009ed9;
   }
+
+  /* background: #363292; */
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
 `;
 const Section = styled.div`
   margin: 10px;
@@ -152,12 +182,49 @@ const Cointtainer = styled.div`
   z-index: 10;
   border-radius: 10px;
   box-shadow: 5px 6px 15px 6px #888888;
-  padding: 30px;
+  padding: 10px;
 `;
 const Head = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 30px 20px 2px 10px;
+`;
+
+const ldsRipple = keyframes`
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+`;
+const Loading = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 140px;
+  top: -21px;
+  /* z-index: 20; */
+
+  div {
+    position: absolute;
+    border: 4px solid #fff;
+    opacity: 1;
+    border-radius: 50%;
+    animation: ${ldsRipple} 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+
+    &:nth-child(2) {
+      animation-delay: -0.5s;
+    }
+  }
 `;
 
 export default NewGroup;

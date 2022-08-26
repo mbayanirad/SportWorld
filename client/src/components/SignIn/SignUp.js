@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { useState, useRef } from "react";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
@@ -12,6 +12,8 @@ const SignUp = ({ setSignUp }) => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
+  const [newUser, setNewUser] = useState(false);
+
   /** @type React.MutableRe&Object<HTMLInputElement> */
   const addressRef = useRef();
 
@@ -56,6 +58,7 @@ const SignUp = ({ setSignUp }) => {
     
     const handleSignUp = async (ev) => {
       ev.preventDefault();
+      setNewUser(true);
       
       //check password is mutch or not
       if(individuals.password === individuals.verifyPassword){
@@ -246,7 +249,15 @@ const SignUp = ({ setSignUp }) => {
         </Section>
         <Divider />
         <Submit>
-        <Btn type="submit" />
+        <Btn type="submit" >
+            Sing Up
+        {newUser && (
+            <Loading>
+            <div></div>
+            <div></div>
+            </Loading>
+          )}
+        </Btn>
         </Submit> 
       </form>
     </Cointtainer>
@@ -265,15 +276,33 @@ const Input = styled.input`
 const Address = styled(Input)`
   min-width: 390px;
 `;
-const Btn = styled(Input)`
-  background: #15be89;
+const Btn = styled.button`
+  position: relative;
+  display: block;
+  width: 60%;
+  height: 35px;
+  border-color: transparent;
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
+
+  border-radius: 4px;
   color: white;
-  border: none;
-  font-weight: bold;
-  border-radius: 5px;
+  margin-left: 5%;
+  margin-top: 2%;
+  background: #15be89;
+
   &:hover {
-    background: #99be62;
+    background: #009ed9;
   }
+
+  /* background: #363292; */
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
 `;
 const Section = styled.div`
   margin: 10px;
@@ -307,4 +336,46 @@ const Head = styled.div`
   justify-content: space-between;
   margin: 30px 20px 2px 10px;
 `;
+
+const ldsRipple = keyframes`
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+`;
+const Loading = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 140px;
+  top: -21px;
+  left: -20px;
+
+  /* z-index: 20; */
+
+  div {
+    position: absolute;
+    border: 4px solid #fff;
+    opacity: 1;
+    border-radius: 50%;
+    animation: ${ldsRipple} 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+
+    &:nth-child(2) {
+      animation-delay: -0.5s;
+    }
+  }
+`;
+
+
+
 export default SignUp;

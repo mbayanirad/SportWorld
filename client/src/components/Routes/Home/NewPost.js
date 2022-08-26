@@ -148,15 +148,7 @@ const Inpute = styled.input`
   /* background: #15be89; */
 `;
 
-const Avatar = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-left: 2%;
-  /* position: absolute; */
-  /* top: 30%; */
-  /* left: 0%; */
-`;
+
 const PostText = styled.textarea`
   width: 85%;
   height: 150px;

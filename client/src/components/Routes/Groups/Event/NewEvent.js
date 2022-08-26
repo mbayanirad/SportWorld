@@ -86,7 +86,7 @@ const SignUp = ({ setSignUp }) => {
       }}
     >
       <Head>
-        <h1>Sign Up</h1>
+        <h1>New Event</h1>
         <IoMdCloseCircleOutline size={30} onClick={() => setSignUp(false)} />
       </Head>
       <Divider />
